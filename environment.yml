@@ -1,0 +1,9 @@
+name: cascade
+channels:
+  - defaults
+dependencies:
+  - python=3.6.10
+  - numpy=1.19.1
+  - pip:
+    - opencv-python==3.4.10.37
+
