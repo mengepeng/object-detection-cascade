@@ -33,7 +33,6 @@ class Detection:
         for (x, y, w, h) in vehicles:
             cv2.rectangle(img, (x, y), (x + w, y + h), (200, 100, 0), 2)
             cv2.rectangle(img, (x, y - 16), (x + 40, y - 2), (200, 100, 0), -1)
-            cv2.putText(img, 'car', (x, y - 1), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.8, (0, 0, 0), 2)
+            cv2.putText(img, 'car', (x, y - 1), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
 
         return img

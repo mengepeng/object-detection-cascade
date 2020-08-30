@@ -3,7 +3,7 @@
 ## Objective
 
 Cascade Classifier of OpenCV includes two major stages: training and detection.
-It is a good method for face detection, eye detection, face expression and fatigue recognition.
+It is a good method for face detection, eye detection, face expression and fatigue recognition, etc.
 But here I wanna use it for vehicle detection and see how it works.
 
 ## Dependencies & Environment
@@ -11,7 +11,7 @@ But here I wanna use it for vehicle detection and see how it works.
 * OpenCV 3.4.10
 * Ubuntu 16.04
 
-## Pipeline
+## How to train and use cascade classifier
 
 ### 1. Install OpenCV
 
@@ -38,24 +38,38 @@ Size of positive samples should be normalized to 24x24 or else..., but not too l
 There is no need to normalize the size of negative samples, 
 but they must be larger than positive samples' size.
 * [normalization.py](./detector/normalization.py) is a tool for normalization.
+```sh
+python normalization.py
+```
 * save all normalized positive samples in directory /pos
 * save all normalized negative samples in directory /neg
 
 #### 2.3 Create txt file
 
-* **ls -rt pos > pos.txt**  # contains positive samples' name
-* change all names into the same format, like: **pos/12345.jpg 1 0 0 24 24**  
-* **ls -rt neg > neg.txt**  # contains negative samples' name
-* change all names into the same format, like: **neg/12345.jpg**
+* Create pos.txt
+```sh 
+ls -rt pos > pos.txt  # contains positive samples' name
+```
+then, change all names into the same format: **pos/12345.jpg 1 0 0 24 24**
+
+* Create neg.txt
+```sh
+ls -rt neg > neg.txt  # contains negative samples' name
+```
+then, change all names into the same format: **neg/12345.jpg**
 
 #### 2.4 Create vec file
 
+```sh
 opencv_createsamples -info pos.txt -vec pos.vec -bg neg.txt -num 1500 -w 24 -h 24
+```
 
-### Train cascade
+### 3. Train cascade
 
+```sh
 opencv_traincascade -data xml -vec pos.vec -bg neg.txt -numPos 1000 -numNeg 5000 -numStages 20 
 -featureType HAAR -w 24 -h 24 -minHitRate 0.995 -maxFalseAlarmRate 0.5 -mode ALL
+```
 
 * -numPos: Number of positive samples used in training for every classifier stage, 
 **must less than the total number of positive samples**.
@@ -65,19 +79,22 @@ opencv_traincascade -data xml -vec pos.vec -bg neg.txt -numPos 1000 -numNeg 5000
 
 After training we get the XML cascade classifier: [cascade.xml](./detector/data/xml/cascade.xml).
 
-### Test cascade classifier
+### 4. Test cascade classifier
 
-Please see [detection.py](./detection.py). 
+Run [main.py](./main.py) to test cascade classifier in [detection.py](./detection.py).
+```sh
+python main.py
+```  
 ![result](./data/car_detect.jpg)
 
-### Conclusion
+## Conclusion
 
 * Cascade classifier works really fast, it can be used in situations 
 where we have low computational power and we do not want to compromise on the speed.
-* However, it works not so well in complex situations, such as vehicles detection in heavy streets, 
+* However, it works not so well in complex situations like vehicles detection in heavy streets, 
 because the accuracy is not so good. Of course, the accuracy depends on the training data, 
 if we have a very large set of training data with high quality, the accuracy would be much better.
-* For better accuracy we could use deep learning algorithm instead, such as YOLO.
+* For better accuracy we could use deep learning algorithms instead, such as YOLO.
 
 
 
